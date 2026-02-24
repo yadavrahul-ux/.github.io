@@ -1,152 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My To-Do List</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My To-Do List</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
-        .container {
-            background: white;
-            width: 350px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+.container {
+    background: white;
+    width: 380px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
+h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
 
-        .input-row {
-            display: flex;
-            margin-bottom: 10px;
-        }
+.input-row {
+    display: flex;
+    margin-bottom: 10px;
+}
 
-        input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
 
-        button {
-            padding: 8px 15px;
-            background: #007bff;
-            border: none;
-            color: white;
-            margin-left: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+button {
+    padding: 10px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-        ul {
-            padding: 0;
-            list-style: none;
-        }
+.add-btn {
+    background: #007bff;
+    color: white;
+}
 
-        li {
-            padding: 8px;
-            background: #e9ecef;
-            margin-top: 5px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.clear-btn {
+    background: #6c757d;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
 
-        li.completed {
-            text-decoration: line-through;
-            color: gray;
-        }
+ul {
+    padding: 0;
+    list-style: none;
+}
 
-        .delete-btn {
-            background: red;
-            border: none;
-            color: white;
-            padding: 5px 8px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+li {
+    padding: 8px;
+    background: #e9ecef;
+    margin-top: 5px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.stats {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    color: #555;
+}
+</style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>My To-Do List</h2>
-        
-        <div class="input-row">
-            <input id="taskInput" type="text" placeholder="Enter task...">
-            <button onclick="addTask()">Add</button>
-        </div>
 
-        <ul id="taskList"></ul>
+<div class="container">
+    <h2>My To-Do List</h2>
+
+    <div class="input-row">
+        <input id="taskInput" type="text" placeholder="Enter task...">
+        <button class="add-btn" onclick="addTask()">Add</button>
     </div>
 
-    <script>
-        let taskList = document.getElementById("taskList");
+    <ul id="taskList"></ul>
 
-        // Load saved tasks
-        window.onload = function() {
-            let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-            savedTasks.forEach(t => addTaskToUI(t.text, t.completed));
-        };
+    <div class="stats" id="stats"></div>
 
-        function addTask() {
-            let taskText = document.getElementById("taskInput").value.trim();
-            if (taskText === "") return;
+    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+</div>
 
-            addTaskToUI(taskText, false);
-            saveTasks();
-            document.getElementById("taskInput").value = "";
-        }
+<script>
+let taskList = document.getElementById("taskList");
+let taskInput = document.getElementById("taskInput");
+let stats = document.getElementById("stats");
 
-        function addTaskToUI(text, completed) {
-            let li = document.createElement("li");
-            if (completed) li.classList.add("completed");
+window.onload = function() {
+    let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    savedTasks.forEach(t => addTaskToUI(t.text, t.completed));
+    updateStats();
+};
 
-            li.innerHTML = `
-                <span onclick="toggleComplete(this)">${text}</span>
-                <button class="delete-btn" onclick="deleteTask(this)">X</button>
-            `;
+// Add task with Enter key
+taskInput.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") addTask();
+});
 
-            taskList.appendChild(li);
-        }
+function addTask() {
+    let taskText = taskInput.value.trim();
+    if (taskText === "") return;
 
-        function toggleComplete(el) {
-            el.parentElement.classList.toggle("completed");
-            saveTasks();
-        }
+    addTaskToUI(taskText, false);
+    saveTasks();
+    taskInput.value = "";
+    updateStats();
+}
 
-        function deleteTask(btn) {
-            btn.parentElement.remove();
-            saveTasks();
-        }
+function addTaskToUI(text, completed) {
+    let li = document.createElement("li");
+    if (completed) li.classList.add("completed");
 
-        function saveTasks() {
-            let tasks = [];
-            document.querySelectorAll("li").forEach(li => {
-                tasks.push({
-                    text: li.querySelector("span").innerText,
-                    completed: li.classList.contains("completed")
-                });
-            });
+    li.innerHTML = `
+        <span onclick="toggleComplete(this)">${text}</span>
+        <button class="delete-btn" onclick="deleteTask(this)">X</button>
+    `;
 
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-        }
-    </script>
+    taskList.appendChild(li);
+}
+
+function toggleComplete(el) {
+    el.parentElement.classList.toggle("completed");
+    saveTasks();
+    updateStats();
+}
+
+function deleteTask(btn) {
+    btn.parentElement.remove();
+    saveTasks();
+    updateStats();
+}
+
+function clearAll() {
+    taskList.innerHTML = "";
+    saveTasks();
+    updateStats();
+}
+
+function saveTasks() {
+    let tasks = [];
+    document.querySelectorAll("#taskList li").forEach(li => {
+        tasks.push({
+            text: li.querySelector("span").innerText,
+            completed: li.classList.contains("completed")
+        });
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function updateStats() {
+    let total = document.querySelectorAll("#taskList li").length;
+    let completed = document.querySelectorAll("#taskList li.completed").length;
+    let pending = total - completed;
+
+    stats.innerHTML = `
+        Total: ${total} | Completed: ${completed} | Pending: ${pending}
+    `;
+}
+</script>
 
 </body>
 </html>
