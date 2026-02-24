@@ -1,197 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>My To-Do List</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Task Dashboard</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+transition:0.3s ease;
 }
 
-.container {
-    background: white;
-    width: 380px;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+body{
+display:flex;
+height:100vh;
+background:linear-gradient(135deg,#667eea,#764ba2);
+color:#333;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 15px;
+/* SIDEBAR */
+.sidebar{
+width:240px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(15px);
+padding:20px;
+color:white;
 }
 
-.input-row {
-    display: flex;
-    margin-bottom: 10px;
+.sidebar h2{
+margin-bottom:20px;
 }
 
-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+.sidebar ul{
+list-style:none;
 }
 
-button {
-    padding: 10px;
-    margin-left: 5px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.sidebar li{
+margin:15px 0;
+cursor:pointer;
 }
 
-.add-btn {
-    background: #007bff;
-    color: white;
+/* MAIN */
+.main{
+flex:1;
+padding:25px;
+overflow-y:auto;
 }
 
-.clear-btn {
-    background: #6c757d;
-    color: white;
-    width: 100%;
-    margin-top: 10px;
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
-ul {
-    padding: 0;
-    list-style: none;
+.dark-btn{
+padding:8px 15px;
+border:none;
+background:#111827;
+color:white;
+border-radius:8px;
+cursor:pointer;
 }
 
-li {
-    padding: 8px;
-    background: #e9ecef;
-    margin-top: 5px;
-    border-radius: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* CARD STATS */
+.cards{
+display:flex;
+gap:15px;
+margin-bottom:20px;
 }
 
-li.completed {
-    text-decoration: line-through;
-    color: gray;
+.card{
+flex:1;
+padding:20px;
+border-radius:15px;
+background:rgba(255,255,255,0.25);
+backdrop-filter:blur(15px);
+color:white;
 }
 
-.delete-btn {
-    background: red;
-    color: white;
-    border: none;
-    padding: 5px 8px;
-    border-radius: 5px;
-    cursor: pointer;
+/* TASK BOX */
+.task-box{
+padding:20px;
+border-radius:15px;
+background:rgba(255,255,255,0.25);
+backdrop-filter:blur(15px);
 }
 
-.stats {
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: center;
-    color: #555;
+.input-row{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+flex-wrap:wrap;
+}
+
+input,select{
+padding:8px;
+border:none;
+border-radius:8px;
+outline:none;
+}
+
+button.add-btn{
+background:#10b981;
+color:white;
+border:none;
+padding:8px 15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+ul{
+list-style:none;
+}
+
+li{
+padding:10px;
+margin-top:8px;
+border-radius:10px;
+background:rgba(255,255,255,0.3);
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:white;
+}
+
+.completed{
+text-decoration:line-through;
+opacity:0.6;
+}
+
+/* PRIORITY COLORS */
+.high{border-left:5px solid #ef4444;}
+.medium{border-left:5px solid #f59e0b;}
+.low{border-left:5px solid #22c55e;}
+
+/* PROGRESS BAR */
+.progress{
+height:10px;
+background:rgba(255,255,255,0.3);
+border-radius:10px;
+margin-top:15px;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#22c55e;
+border-radius:10px;
+}
+
+/* DARK MODE */
+.dark{
+background:#0f172a !important;
+}
+.dark .card,
+.dark .task-box{
+background:#1e293b !important;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h2>My To-Do List</h2>
+<div class="sidebar">
+<h2>Pro Dashboard</h2>
+<ul>
+<li>🏠 Home</li>
+<li>📋 Tasks</li>
+<li>📊 Analytics</li>
+<li>⚙ Settings</li>
+</ul>
+</div>
 
-    <div class="input-row">
-        <input id="taskInput" type="text" placeholder="Enter task...">
-        <button class="add-btn" onclick="addTask()">Add</button>
-    </div>
+<div class="main">
 
-    <ul id="taskList"></ul>
+<div class="header">
+<h2>Task Manager Pro</h2>
+<button class="dark-btn" onclick="toggleDark()">Dark Mode</button>
+</div>
 
-    <div class="stats" id="stats"></div>
+<div class="cards">
+<div class="card">Total: <span id="total">0</span></div>
+<div class="card">Completed: <span id="completed">0</span></div>
+<div class="card">Pending: <span id="pending">0</span></div>
+</div>
 
-    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+<div class="task-box">
+
+<div class="input-row">
+<input id="taskInput" placeholder="Task name">
+<input type="date" id="dueDate">
+<select id="priority">
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
+</select>
+<button class="add-btn" onclick="addTask()">Add</button>
+</div>
+
+<input type="text" id="search" placeholder="Search task..." onkeyup="filterTasks()">
+
+<ul id="taskList"></ul>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+</div>
+
 </div>
 
 <script>
-let taskList = document.getElementById("taskList");
-let taskInput = document.getElementById("taskInput");
-let stats = document.getElementById("stats");
 
-window.onload = function() {
-    let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    savedTasks.forEach(t => addTaskToUI(t.text, t.completed));
-    updateStats();
+let taskList=document.getElementById("taskList");
+
+window.onload=function(){
+let saved=JSON.parse(localStorage.getItem("tasks"))||[];
+saved.forEach(t=>addTaskToUI(t));
+updateStats();
 };
 
-// Add task with Enter key
-taskInput.addEventListener("keypress", function(e) {
-    if (e.key === "Enter") addTask();
+function addTask(){
+let text=document.getElementById("taskInput").value.trim();
+let date=document.getElementById("dueDate").value;
+let priority=document.getElementById("priority").value;
+
+if(!text)return;
+
+let task={text,date,priority,completed:false};
+addTaskToUI(task);
+saveTasks();
+updateStats();
+
+document.getElementById("taskInput").value="";
+}
+
+function addTaskToUI(task){
+let li=document.createElement("li");
+li.classList.add(task.priority);
+if(task.completed)li.classList.add("completed");
+
+li.innerHTML=`
+<div onclick="toggleTask(this)">
+<strong>${task.text}</strong><br>
+<small>${task.date || ""}</small>
+</div>
+<div>
+<button onclick="editTask(this)">✏</button>
+<button onclick="deleteTask(this)">❌</button>
+</div>
+`;
+
+taskList.appendChild(li);
+}
+
+function toggleTask(el){
+el.parentElement.classList.toggle("completed");
+saveTasks();
+updateStats();
+}
+
+function deleteTask(btn){
+btn.parentElement.parentElement.remove();
+saveTasks();
+updateStats();
+}
+
+function editTask(btn){
+let li=btn.parentElement.parentElement;
+let text=prompt("Edit task:",li.querySelector("strong").innerText);
+if(text){
+li.querySelector("strong").innerText=text;
+saveTasks();
+}
+}
+
+function saveTasks(){
+let tasks=[];
+document.querySelectorAll("#taskList li").forEach(li=>{
+tasks.push({
+text:li.querySelector("strong").innerText,
+date:li.querySelector("small").innerText,
+priority:li.classList.contains("high")?"high":
+li.classList.contains("medium")?"medium":"low",
+completed:li.classList.contains("completed")
 });
-
-function addTask() {
-    let taskText = taskInput.value.trim();
-    if (taskText === "") return;
-
-    addTaskToUI(taskText, false);
-    saveTasks();
-    taskInput.value = "";
-    updateStats();
+});
+localStorage.setItem("tasks",JSON.stringify(tasks));
 }
 
-function addTaskToUI(text, completed) {
-    let li = document.createElement("li");
-    if (completed) li.classList.add("completed");
+function updateStats(){
+let total=document.querySelectorAll("#taskList li").length;
+let completed=document.querySelectorAll("#taskList li.completed").length;
+let pending=total-completed;
 
-    li.innerHTML = `
-        <span onclick="toggleComplete(this)">${text}</span>
-        <button class="delete-btn" onclick="deleteTask(this)">X</button>
-    `;
+document.getElementById("total").innerText=total;
+document.getElementById("completed").innerText=completed;
+document.getElementById("pending").innerText=pending;
 
-    taskList.appendChild(li);
+let percent=total===0?0:(completed/total)*100;
+document.getElementById("progressBar").style.width=percent+"%";
 }
 
-function toggleComplete(el) {
-    el.parentElement.classList.toggle("completed");
-    saveTasks();
-    updateStats();
+function filterTasks(){
+let value=document.getElementById("search").value.toLowerCase();
+document.querySelectorAll("#taskList li").forEach(li=>{
+li.style.display=li.innerText.toLowerCase().includes(value)?"flex":"none";
+});
 }
 
-function deleteTask(btn) {
-    btn.parentElement.remove();
-    saveTasks();
-    updateStats();
-}
-
-function clearAll() {
-    taskList.innerHTML = "";
-    saveTasks();
-    updateStats();
-}
-
-function saveTasks() {
-    let tasks = [];
-    document.querySelectorAll("#taskList li").forEach(li => {
-        tasks.push({
-            text: li.querySelector("span").innerText,
-            completed: li.classList.contains("completed")
-        });
-    });
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function updateStats() {
-    let total = document.querySelectorAll("#taskList li").length;
-    let completed = document.querySelectorAll("#taskList li.completed").length;
-    let pending = total - completed;
-
-    stats.innerHTML = `
-        Total: ${total} | Completed: ${completed} | Pending: ${pending}
-    `;
+function toggleDark(){
+document.body.classList.toggle("dark");
 }
 </script>
 
