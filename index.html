@@ -169,14 +169,35 @@ background:#1e293b !important;
 <div class="sidebar">
 <h2>Pro Dashboard</h2>
 <ul>
-<li>🏠 Home</li>
-<li>📋 Tasks</li>
-<li>📊 Analytics</li>
-<li>⚙ Settings</li>
+<li onclick="showSection('home')">🏠 Home</li>
+<li onclick="showSection('tasks')">📋 Tasks</li>
+<li onclick="showSection('analytics')">📊 Analytics</li>
+<li onclick="showSection('settings')">⚙ Settings</li>
 </ul>
 </div>
 
 <div class="main">
+
+<div id="home" class="section">
+<h2>Welcome to Dashboard</h2>
+<p>Select a menu from left.</p>
+</div>
+
+<div id="tasks" class="section" style="display:none;">
+<!-- PUT YOUR CURRENT TASK MANAGER UI HERE -->
+</div>
+
+<div id="analytics" class="section" style="display:none;">
+<h2>Analytics Section</h2>
+<p>Charts will appear here.</p>
+</div>
+
+<div id="settings" class="section" style="display:none;">
+<h2>Settings Section</h2>
+<p>Settings options will appear here.</p>
+</div>
+
+</div>
 
 <div class="header">
 <h2>Task Manager Pro</h2>
@@ -189,7 +210,13 @@ background:#1e293b !important;
 <div class="card">Pending: <span id="pending">0</span></div>
 </div>
 
+<div class="cards">
+   ...
+</div>
+
 <div class="task-box">
+   ...
+</div>
 
 <div class="input-row">
 <input id="taskInput" placeholder="Task name">
