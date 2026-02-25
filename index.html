@@ -41,7 +41,6 @@ list-style:none;
 .sidebar li{
 margin:15px 0;
 cursor:pointer;
-font-size:18px;
 }
 
 /* MAIN */
@@ -167,28 +166,17 @@ background:#1e293b !important;
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
 <h2>Pro Dashboard</h2>
 <ul>
-<li onclick="showSection('home')">🏠 Home</li>
-<li onclick="showSection('tasks')">📋 Tasks</li>
-<li onclick="showSection('analytics')">📊 Analytics</li>
-<li onclick="showSection('settings')">⚙ Settings</li>
+<li>🏠 Home</li>
+<li>📋 Tasks</li>
+<li>📊 Analytics</li>
+<li>⚙ Settings</li>
 </ul>
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="main">
-
-<!-- HOME SECTION -->
-<div id="home" class="section">
-<h2>Welcome to Dashboard</h2>
-<p>Select a menu from left.</p>
-</div>
-
-<!-- TASKS SECTION (Your UI is now inside here!) -->
-<div id="tasks" class="section" style="display:none;">
 
 <div class="header">
 <h2>Task Manager Pro</h2>
@@ -223,31 +211,11 @@ background:#1e293b !important;
 </div>
 
 </div>
-</div>
 
-<!-- ANALYTICS SECTION -->
-<div id="analytics" class="section" style="display:none;">
-<h2>Analytics Section</h2>
-<p>Charts will appear here.</p>
 </div>
-
-<!-- SETTINGS SECTION -->
-<div id="settings" class="section" style="display:none;">
-<h2>Settings Section</h2>
-<p>Settings options will appear here.</p>
-</div>
-
-</div> <!-- end main -->
 
 <script>
 
-// SECTION SWITCHER
-function showSection(id){
-document.querySelectorAll(".section").forEach(sec=>sec.style.display="none");
-document.getElementById(id).style.display="block";
-}
-
-// TASK LOGIC
 let taskList=document.getElementById("taskList");
 
 window.onload=function(){
